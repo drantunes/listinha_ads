@@ -9,9 +9,7 @@ class Avatar extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(50),
-        child: Image.network(
-          'https://didukhn.github.io/homepage/assets/img/photo.jpg',
-        ),
+        child: Image.asset('assets/images/profile.png'),
       ),
     );
   }
