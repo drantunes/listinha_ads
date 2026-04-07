@@ -14,8 +14,9 @@ class ProductsRepository {
     _productsList.add(product);
   }
 
-  List<Product> loadProducts() {
+  Future<List<Product>> loadProducts() async {
     // chamada à API ou BD
+    await Future.delayed(Duration(seconds: 2));
     return products;
   }
 

@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:listinhax/app/models/product.dart';
-import 'package:listinhax/app/repositories/products_repository.dart';
+import 'package:go_router/go_router.dart';
+import 'package:listinhax/app/features/products/products_viewmodel.dart';
 
 class AddProductScreen extends StatefulWidget {
-  final ProductsRepository productsRepository;
-  final void Function() onSave;
+  final ProductsViewmodel productsViewmodel;
 
   const AddProductScreen({
     super.key,
-    required this.productsRepository,
-    required this.onSave,
+    required this.productsViewmodel,
   });
 
   @override
@@ -28,13 +26,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   void save() {
     if (formkey.currentState!.validate()) {
-      widget.productsRepository.addProduct(
-        Product(
-          name: productController.text,
-        ),
+      widget.productsViewmodel.saveProduct(
+        productController.text,
       );
-      widget.onSave();
-      Navigator.of(context).pop();
+      GoRouter.of(context).pop();
     }
   }
 

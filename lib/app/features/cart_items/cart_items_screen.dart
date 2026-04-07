@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:listinhax/app/repositories/products_repository.dart';
+import 'package:listinhax/app/features/products/products_viewmodel.dart';
 
 class CartItemsScreen extends StatefulWidget {
-  final ProductsRepository productsRepository;
-  final void Function() onChange;
+  final ProductsViewmodel productsViewmodel;
 
   const CartItemsScreen({
     super.key,
-    required this.productsRepository,
-    required this.onChange,
+    required this.productsViewmodel,
   });
 
   @override
@@ -24,18 +22,20 @@ class _CartItemsScreenState extends State<CartItemsScreen> {
   @override
   void initState() {
     super.initState();
-    totalItems = widget.productsRepository.cartItems.length;
+    totalItems = widget.productsViewmodel.productsRepository.cartItems.length;
   }
 
   void changeProgress() {
-    checked = checked + 1;
-    oldValue = currentValue;
-    currentValue = checked == 0 ? 0 : checked / totalItems;
+    setState(() {
+      checked = checked + 1;
+      oldValue = currentValue;
+      currentValue = checked == 0 ? 0 : checked / totalItems;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final cartItems = widget.productsRepository.cartItems;
+    final cartItems = widget.productsViewmodel.productsRepository.cartItems;
 
     return Scaffold(
       appBar: AppBar(
@@ -79,8 +79,8 @@ class _CartItemsScreenState extends State<CartItemsScreen> {
                   value: false,
                   onChanged: (val) {
                     setState(() {
-                      widget.productsRepository.toggleCartItem(cartItems[index].product);
-                      widget.onChange();
+                      widget.productsViewmodel.toggleCartItem(cartItems[index].product);
+
                       changeProgress();
                     });
                   },
@@ -94,7 +94,7 @@ class _CartItemsScreenState extends State<CartItemsScreen> {
                       children: [
                         IconButton.filledTonal(
                           onPressed: () => setState(() {
-                            widget.productsRepository.decrease(cartItems[index]);
+                            widget.productsViewmodel.decrease(cartItems[index]);
                           }),
                           icon: Icon(Icons.remove),
                         ),
@@ -107,7 +107,7 @@ class _CartItemsScreenState extends State<CartItemsScreen> {
                         ),
                         IconButton.filledTonal(
                           onPressed: () => setState(() {
-                            widget.productsRepository.increase(cartItems[index]);
+                            widget.productsViewmodel.increase(cartItems[index]);
                           }),
                           icon: Icon(Icons.add),
                         ),
