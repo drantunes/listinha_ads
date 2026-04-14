@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:listinhax/app/models/cart_item.dart';
 import 'package:listinhax/app/models/product.dart';
 import 'package:listinhax/app/repositories/products_repository.dart';
+import 'package:listinhax/app/utils/result.dart';
 
 class ProductsViewmodel extends ChangeNotifier {
   bool isLoading = false;
@@ -16,9 +17,15 @@ class ProductsViewmodel extends ChangeNotifier {
     feedback = '';
     notifyListeners();
 
-    products = await productsRepository.loadProducts();
-    isLoading = false;
-    notifyListeners();
+    final result = await productsRepository.loadProducts();
+    switch (result) {
+      case Ok():
+        products = result.value;
+        isLoading = false;
+        notifyListeners();
+      case Err():
+        debugPrint(result.value);
+    }
   }
 
   void saveProduct(String productName) {

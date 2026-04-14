@@ -4,6 +4,7 @@ import 'package:listinhax/app/features/products/products_viewmodel.dart';
 import 'package:listinhax/app/routes.dart';
 import 'package:listinhax/app/widgets/avatar.dart';
 import 'package:listinhax/app/widgets/shopping_button.dart';
+import 'package:listinhax/theme.dart';
 
 class ProductsScreen extends StatefulWidget {
   final ProductsViewmodel productsViewmodel;
@@ -35,8 +36,72 @@ class _ProductsScreenState extends State<ProductsScreen> {
     }
   }
 
+  double size = 50;
+
   @override
   Widget build(BuildContext context) {
+    // return Scaffold(
+    //   body: Center(
+    //     child: Column(
+    //       mainAxisAlignment: .center,
+    //       crossAxisAlignment: .center,
+    //       children: [
+    //         InkWell(
+    //           onTap: () => Navigator.of(context).push(
+    //             MaterialPageRoute(
+    //               builder: (context) => Scaffold(
+    //                 appBar: AppBar(
+    //                   actions: [
+    //                     Hero(
+    //                       tag: 'image1',
+    //                       child: CircleAvatar(
+    //                         child: Image.asset('assets/images/profile.png'),
+    //                       ),
+    //                     ),
+    //                   ],
+    //                 ),
+    //               ),
+    //             ),
+    //           ),
+    //           child: SizedBox(
+    //             width: 200,
+    //             child: Hero(
+    //               tag: 'image1',
+    //               child: Image.asset('assets/images/profile.png'),
+    //             ),
+    //           ),
+    //         ),
+    //         AnimatedSwitcher(
+    //           duration: Duration(milliseconds: 300),
+    //           transitionBuilder: (child, animation) => RotationTransition(
+    //             turns: animation,
+    //             child: child,
+    //           ),
+    //           child: Text(
+    //             key: ValueKey(size),
+    //             size.toStringAsFixed(0),
+    //             style: Theme.of(context).textTheme.headlineLarge,
+    //           ),
+    //         ),
+    //         InkWell(
+    //           onTap: () => setState(() => size += 50),
+    //           child: AnimatedContainer(
+    //             duration: Duration(milliseconds: 300),
+    //             width: size,
+    //             height: size,
+    //             color: switch (size) {
+    //               50 => Colors.amber,
+    //               100 => Colors.red,
+    //               150 => Colors.blue,
+    //               200 => Colors.green,
+    //               _ => Colors.pink,
+    //             },
+    //           ),
+    //         ),
+    //       ],
+    //     ),
+    //   ),
+    // );
     final vm = widget.productsViewmodel;
     return ListenableBuilder(
       listenable: vm,
@@ -65,6 +130,15 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 : Text('Listinha'),
 
             actions: [
+              ValueListenableBuilder(
+                valueListenable: themeMode,
+                builder: (context, theme, _) => IconButton(
+                  onPressed: () => theme == ThemeMode.dark
+                      ? themeMode.value = ThemeMode.light
+                      : themeMode.value = ThemeMode.dark,
+                  icon: Icon(theme == ThemeMode.dark ? Icons.sunny : Icons.nightlight),
+                ),
+              ),
               ShoppingButton(
                 count: vm.productsRepository.cartItems.length,
                 onPressed: () => context.push(Routes.cartItems),
@@ -89,9 +163,14 @@ class _ProductsScreenState extends State<ProductsScreen> {
             ),
             separatorBuilder: (context, index) => Divider(),
           ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () => context.push(Routes.addProducts),
-            child: Icon(Icons.add_shopping_cart),
+          floatingActionButton: Builder(
+            builder: (context) {
+              return FloatingActionButton(
+                onPressed: () => context.push(Routes.addProducts),
+
+                child: Icon(Icons.add_shopping_cart),
+              );
+            },
           ),
         );
       },

@@ -6,5 +6,7 @@ void main() {
   final productsRepository = ProductsRepository();
   productsRepository.loadProducts();
 
-  runApp(App(productsRepository: productsRepository));
+  runApp(
+    App(productsRepository: productsRepository),
+  );
 }

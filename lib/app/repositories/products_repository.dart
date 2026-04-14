@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:listinhax/app/models/cart_item.dart';
 import 'package:listinhax/app/models/product.dart';
+import 'package:listinhax/app/utils/result.dart';
 
 class ProductsRepository {
   final List<CartItem> _cartItems = [];
@@ -14,10 +15,17 @@ class ProductsRepository {
     _productsList.add(product);
   }
 
-  Future<List<Product>> loadProducts() async {
+  Future<Result<List<Product>, String>> loadProducts() async {
     // chamada à API ou BD
-    await Future.delayed(Duration(seconds: 2));
-    return products;
+    try {
+      if (_productsList.length == 3) {
+        throw Exception('asdasd');
+      }
+      await Future.delayed(Duration(seconds: 2));
+      return Ok(_productsList);
+    } catch (e) {
+      return Err('Erro ao carregar produto');
+    }
   }
 
   void addProductToCart(Product product) {
