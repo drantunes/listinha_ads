@@ -1,13 +1,19 @@
-import 'package:listinhax/app/features/products/products_viewmodel.dart';
-import 'package:listinhax/app/repositories/products_repository.dart';
+import 'package:listinhax/app/data/repositories/products_repository.dart';
+import 'package:listinhax/app/features/cart_items/viewmodels/cart_items_view_model.dart';
+import 'package:listinhax/app/features/products/viewmodels/products_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
 List<SingleChildWidget> providers(ProductsRepository productsRepository) {
   return [
-    Provider.value(value: productsRepository),
-    ChangeNotifierProvider<ProductsViewmodel>(
-      create: (context) => ProductsViewmodel(
+    ChangeNotifierProvider<ProductsRepository>.value(value: productsRepository),
+    ChangeNotifierProvider<ProductsViewModel>(
+      create: (context) => ProductsViewModel(
+        productsRepository: context.read(),
+      )..load(),
+    ),
+    ChangeNotifierProvider<CartItemsViewModel>(
+      create: (context) => CartItemsViewModel(
         productsRepository: context.read(),
       ),
     ),

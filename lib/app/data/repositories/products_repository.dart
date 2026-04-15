@@ -1,58 +1,57 @@
 import 'dart:collection';
 
-import 'package:listinhax/app/models/cart_item.dart';
-import 'package:listinhax/app/models/product.dart';
-import 'package:listinhax/app/utils/result.dart';
+import 'package:flutter/material.dart';
+import 'package:listinhax/app/core/result.dart';
+import 'package:listinhax/app/domain/models/cart_item.dart';
+import 'package:listinhax/app/domain/models/product.dart';
 
-class ProductsRepository {
+class ProductsRepository extends ChangeNotifier {
   final List<CartItem> _cartItems = [];
   final List<Product> _productsList = [];
 
-  UnmodifiableListView<CartItem> get cartItems => UnmodifiableListView(_cartItems);
-  UnmodifiableListView<Product> get products => UnmodifiableListView(_productsList);
+  UnmodifiableListView<CartItem> get cartItems => UnmodifiableListView<CartItem>(_cartItems);
+  UnmodifiableListView<Product> get products => UnmodifiableListView<Product>(_productsList);
 
   void addProduct(Product product) {
     _productsList.add(product);
+    notifyListeners();
   }
 
   Future<Result<List<Product>, String>> loadProducts() async {
-    // chamada à API ou BD
     try {
-      if (_productsList.length == 3) {
-        throw Exception('asdasd');
-      }
-      await Future.delayed(Duration(seconds: 2));
-      return Ok(_productsList);
-    } catch (e) {
+      await Future.delayed(const Duration(seconds: 2));
+      return Ok(List<Product>.from(_productsList));
+    } catch (_) {
       return Err('Erro ao carregar produto');
     }
   }
 
-  void addProductToCart(Product product) {
-    _cartItems.add(
-      CartItem(product: product, amount: 1),
-    );
-  }
-
   void toggleCartItem(Product product) {
-    int productIndex = _cartItems.indexWhere((item) => item.product.name == product.name);
+    final productIndex = _cartItems.indexWhere((item) => item.product.name == product.name);
 
     if (productIndex >= 0) {
       _cartItems.removeAt(productIndex);
+      notifyListeners();
       return;
     }
 
     _cartItems.add(
       CartItem(product: product, amount: 1),
     );
+    notifyListeners();
   }
 
   void _changeAmount(CartItem cartItem, int amount) {
-    int cartIndex = _cartItems.indexWhere(
+    final cartIndex = _cartItems.indexWhere(
       (item) => item.product.name == cartItem.product.name,
     );
 
+    if (cartIndex < 0) {
+      return;
+    }
+
     _cartItems[cartIndex] = CartItem(product: cartItem.product, amount: amount);
+    notifyListeners();
   }
 
   void increase(CartItem cartItem) {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:listinhax/app/data/repositories/products_repository.dart';
 import 'package:listinhax/app/providers/providers.dart';
-import 'package:listinhax/app/repositories/products_repository.dart';
 import 'package:listinhax/app/routes.dart';
 import 'package:listinhax/theme.dart';
 import 'package:provider/provider.dart';
