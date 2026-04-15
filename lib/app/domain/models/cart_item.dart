@@ -1,4 +1,4 @@
-import 'package:listinhax/app/models/product.dart';
+import 'package:listinhax/app/domain/models/product.dart';
 
 class CartItem {
   final Product product;

@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:listinhax/app/features/products/products_viewmodel.dart';
+import 'package:listinhax/app/features/products/viewmodels/products_view_model.dart';
 
 class AddProductScreen extends StatefulWidget {
-  final ProductsViewmodel productsViewmodel;
+  final ProductsViewModel productsViewModel;
 
-  const AddProductScreen({
-    super.key,
-    required this.productsViewmodel,
-  });
+  const AddProductScreen({super.key, required this.productsViewModel});
 
   @override
   State<AddProductScreen> createState() => _AddProductScreenState();
@@ -26,7 +23,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   void save() {
     if (formkey.currentState!.validate()) {
-      widget.productsViewmodel.saveProduct(
+      widget.productsViewModel.saveProduct(
         productController.text,
       );
       GoRouter.of(context).pop();
