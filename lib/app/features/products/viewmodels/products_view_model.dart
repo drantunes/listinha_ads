@@ -10,7 +10,7 @@ class ProductsViewModel extends ChangeNotifier {
   String _feedback = '';
 
   ProductsViewModel({required ProductsRepository productsRepository})
-      : _productsRepository = productsRepository {
+    : _productsRepository = productsRepository {
     _productsRepository.addListener(_syncFromRepository);
     _syncFromRepository();
   }
@@ -47,8 +47,12 @@ class ProductsViewModel extends ChangeNotifier {
       return;
     }
 
-    _productsRepository.addProduct(Product(name: trimmedName));
-    _feedback = '$trimmedName foi salvo!';
+    final response = _productsRepository.addProduct(Product(name: trimmedName));
+    if (response is Ok) {
+      _feedback = '$trimmedName foi salvo!';
+    } else if (response is Err) {
+      _feedback = 'Erro ao salvar, tente novamente!';
+    }
     notifyListeners();
   }
 

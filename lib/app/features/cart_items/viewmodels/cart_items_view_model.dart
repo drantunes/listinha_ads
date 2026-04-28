@@ -10,7 +10,7 @@ class CartItemsViewModel extends ChangeNotifier {
   double _currentProgress = 0;
 
   CartItemsViewModel({required ProductsRepository productsRepository})
-      : _productsRepository = productsRepository {
+    : _productsRepository = productsRepository {
     _productsRepository.addListener(_onRepositoryChanged);
   }
 
@@ -24,7 +24,6 @@ class CartItemsViewModel extends ChangeNotifier {
     _checkedItems = 0;
     _oldProgress = 0;
     _currentProgress = 0;
-    notifyListeners();
   }
 
   void completeItem(CartItem cartItem) {
