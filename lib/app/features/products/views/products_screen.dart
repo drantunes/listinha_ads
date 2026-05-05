@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:listinhax/app/data/repositories/user_repository.dart';
 import 'package:listinhax/app/features/products/viewmodels/products_view_model.dart';
 import 'package:listinhax/app/routes.dart';
 import 'package:listinhax/app/widgets/avatar.dart';
 import 'package:listinhax/app/widgets/shopping_button.dart';
 import 'package:listinhax/theme.dart';
+import 'package:provider/provider.dart';
 
 class ProductsScreen extends StatefulWidget {
   final ProductsViewModel productsViewModel;
@@ -81,6 +83,12 @@ class _ProductsScreenState extends State<ProductsScreen> {
               ShoppingButton(
                 count: vm.cartItemsCount,
                 onPressed: () => context.push(Routes.cartItems),
+              ),
+              TextButton(
+                onPressed: () {
+                  context.read<UserRepository>().logout();
+                },
+                child: Text('Sair'),
               ),
             ],
           ),

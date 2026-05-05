@@ -3,9 +3,9 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:listinhax/app/core/result.dart';
 import 'package:listinhax/app/data/services/database.dart';
-import 'package:listinhax/app/data/services/objectbox/product_box.dart';
 import 'package:listinhax/app/domain/models/cart_item.dart';
 import 'package:listinhax/app/domain/models/product.dart';
+import 'package:pocketbase/pocketbase.dart';
 
 class ProductsRepository extends ChangeNotifier {
   final Database database;
@@ -32,10 +32,10 @@ class ProductsRepository extends ChangeNotifier {
 
   Future<Result<List<Product>, String>> loadProducts() async {
     try {
-      final productsData = database.loadProducts();
+      final productsData = await database.loadProducts();
       _productsList = [];
-      for (final ProductBox productData in productsData) {
-        _productsList.add(productData.fromBox());
+      for (final RecordModel product in productsData) {
+        _productsList.add(Product(name: product.data['name']));
       }
       return Ok(products);
     } catch (_) {

@@ -14,7 +14,9 @@ dependencies:
   objectbox_flutter_libs: ^5.3.1
   path: ^1.9.1
   path_provider: ^2.1.5
+  pocketbase: ^0.23.2
   provider: ^6.1.5+1
+  shared_preferences: ^2.5.5
 
 dev_dependencies:
   flutter_test:
