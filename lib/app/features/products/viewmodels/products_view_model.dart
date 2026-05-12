@@ -22,10 +22,6 @@ class ProductsViewModel extends ChangeNotifier {
     _productsRepository.addListener(_onRepositoryChanged);
   }
 
-  // ---------------------------------------------------------------------------
-  // Getters
-  // ---------------------------------------------------------------------------
-
   bool get isLoading => _isLoading;
   List<Product> get products => List<Product>.unmodifiable(_products);
   String get feedback => _feedback;
@@ -33,13 +29,8 @@ class ProductsViewModel extends ChangeNotifier {
   int get cartItemsCount => _productsRepository.cartItems.length;
 
   bool isInCart(Product product) {
-    return _productsRepository.cartItems
-        .any((item) => item.product.name == product.name);
+    return _productsRepository.cartItems.any((item) => item.product.name == product.name);
   }
-
-  // ---------------------------------------------------------------------------
-  // Stream subscription
-  // ---------------------------------------------------------------------------
 
   void _listenToProducts() {
     _streamSubscription = _productsRepository.productsStream.listen(
@@ -56,10 +47,6 @@ class ProductsViewModel extends ChangeNotifier {
       },
     );
   }
-
-  // ---------------------------------------------------------------------------
-  // Commands
-  // ---------------------------------------------------------------------------
 
   void saveProduct(String productName) {
     final trimmedName = productName.trim();
@@ -84,18 +71,10 @@ class ProductsViewModel extends ChangeNotifier {
     _productsRepository.toggleCartItem(product);
   }
 
-  // ---------------------------------------------------------------------------
-  // Private helpers
-  // ---------------------------------------------------------------------------
-
   void _onRepositoryChanged() {
     // Triggered by cart mutations on the repository.
     notifyListeners();
   }
-
-  // ---------------------------------------------------------------------------
-  // Lifecycle
-  // ---------------------------------------------------------------------------
 
   @override
   void dispose() {

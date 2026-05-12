@@ -31,19 +31,11 @@ class ProductsRepository extends ChangeNotifier {
     );
   }
 
-  // ---------------------------------------------------------------------------
-  // Getters
-  // ---------------------------------------------------------------------------
-
   UnmodifiableListView<CartItem> get cartItems =>
       UnmodifiableListView<CartItem>(_cartItems);
 
   UnmodifiableListView<Product> get products =>
       UnmodifiableListView<Product>(_productsList);
-
-  // ---------------------------------------------------------------------------
-  // Write operations
-  // ---------------------------------------------------------------------------
 
   Result<bool, String> addProduct(Product product) {
     try {
@@ -103,10 +95,6 @@ class ProductsRepository extends ChangeNotifier {
     final amount = (cartItem.amount == 0) ? 0 : cartItem.amount - 1;
     _changeAmount(cartItem, amount);
   }
-
-  // ---------------------------------------------------------------------------
-  // Lifecycle
-  // ---------------------------------------------------------------------------
 
   @override
   void dispose() {
