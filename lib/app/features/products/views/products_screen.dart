@@ -51,25 +51,22 @@ class _ProductsScreenState extends State<ProductsScreen> {
           appBar: AppBar(
             leading: Avatar(),
             centerTitle: true,
-            title: (vm.isLoading)
+            title: vm.isLoading
                 ? Row(
-                    mainAxisAlignment: .center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(
                         width: 20,
                         height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                        ),
+                        child: CircularProgressIndicator(strokeWidth: 2),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Text('Loading'),
+                        child: Text('Carregando...'),
                       ),
                     ],
                   )
                 : Text('Listinha'),
-
             actions: [
               ValueListenableBuilder(
                 valueListenable: themeMode,
@@ -77,7 +74,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   onPressed: () => theme == ThemeMode.dark
                       ? themeMode.value = ThemeMode.light
                       : themeMode.value = ThemeMode.dark,
-                  icon: Icon(theme == ThemeMode.dark ? Icons.sunny : Icons.nightlight),
+                  icon: Icon(
+                    theme == ThemeMode.dark ? Icons.sunny : Icons.nightlight,
+                  ),
                 ),
               ),
               ShoppingButton(
@@ -85,38 +84,53 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 onPressed: () => context.push(Routes.cartItems),
               ),
               TextButton(
-                onPressed: () {
-                  context.read<UserRepository>().logout();
-                },
+                onPressed: () => context.read<UserRepository>().logout(),
                 child: Text('Sair'),
               ),
             ],
           ),
-
-          body: ListView.separated(
-            itemCount: vm.products.length,
-            itemBuilder: (context, index) => ListTile(
-              title: Text(vm.products[index].name),
-              trailing: Switch(
-                value: vm.isInCart(vm.products[index]),
-                onChanged: (val) {
-                  vm.toggleProductInCart(vm.products[index]);
-                },
-              ),
-            ),
-            separatorBuilder: (context, index) => Divider(),
-          ),
-          floatingActionButton: Builder(
-            builder: (context) {
-              return FloatingActionButton(
-                onPressed: () => context.push(Routes.addProducts),
-
-                child: Icon(Icons.add_shopping_cart),
-              );
-            },
+          body: _buildBody(vm),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () => context.push(Routes.addProducts),
+            child: Icon(Icons.add_shopping_cart),
           ),
         );
       },
+    );
+  }
+
+  Widget _buildBody(ProductsViewModel vm) {
+    if (vm.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (vm.error.isNotEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.cloud_off, size: 48, color: Colors.grey),
+            const SizedBox(height: 16),
+            Text(vm.error, textAlign: TextAlign.center),
+          ],
+        ),
+      );
+    }
+
+    if (vm.products.isEmpty) {
+      return const Center(child: Text('Nenhum produto cadastrado.'));
+    }
+
+    return ListView.separated(
+      itemCount: vm.products.length,
+      itemBuilder: (context, index) => ListTile(
+        title: Text(vm.products[index].name),
+        trailing: Switch(
+          value: vm.isInCart(vm.products[index]),
+          onChanged: (_) => vm.toggleProductInCart(vm.products[index]),
+        ),
+      ),
+      separatorBuilder: (context, index) => const Divider(),
     );
   }
 }

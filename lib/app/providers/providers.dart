@@ -15,7 +15,7 @@ List<SingleChildWidget> providers(
     ChangeNotifierProvider<ProductsViewModel>(
       create: (context) => ProductsViewModel(
         productsRepository: context.read(),
-      )..load(),
+      ),
     ),
     ChangeNotifierProvider<CartItemsViewModel>(
       create: (context) => CartItemsViewModel(
