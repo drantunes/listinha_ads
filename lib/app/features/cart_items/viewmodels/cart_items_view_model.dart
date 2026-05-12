@@ -10,9 +10,7 @@ class CartItemsViewModel extends ChangeNotifier {
   double _currentProgress = 0;
 
   CartItemsViewModel({required ProductsRepository productsRepository})
-    : _productsRepository = productsRepository {
-    _productsRepository.addListener(_onRepositoryChanged);
-  }
+    : _productsRepository = productsRepository;
 
   List<CartItem> get cartItems => _productsRepository.cartItems.toList();
   int get remainingItems => (_totalItems - _checkedItems).clamp(0, _totalItems);
@@ -43,15 +41,5 @@ class CartItemsViewModel extends ChangeNotifier {
 
   void decrease(CartItem cartItem) {
     _productsRepository.decrease(cartItem);
-  }
-
-  void _onRepositoryChanged() {
-    notifyListeners();
-  }
-
-  @override
-  void dispose() {
-    _productsRepository.removeListener(_onRepositoryChanged);
-    super.dispose();
   }
 }

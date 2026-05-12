@@ -1,5 +1,6 @@
 import 'package:listinhax/app/data/repositories/products_repository.dart';
 import 'package:listinhax/app/data/repositories/user_repository.dart';
+import 'package:listinhax/app/data/services/products_service.dart';
 import 'package:listinhax/app/features/cart_items/viewmodels/cart_items_view_model.dart';
 import 'package:listinhax/app/features/products/viewmodels/products_view_model.dart';
 import 'package:provider/provider.dart';
@@ -11,7 +12,8 @@ List<SingleChildWidget> providers(
 ) {
   return [
     Provider<UserRepository>.value(value: userRepository),
-    ChangeNotifierProvider<ProductsRepository>.value(value: productsRepository),
+    Provider<ProductsRepository>.value(value: productsRepository),
+    Provider<ProductsApiService>.value(value: productsRepository.productsService),
     ChangeNotifierProvider<ProductsViewModel>(
       create: (context) => ProductsViewModel(
         productsRepository: context.read(),

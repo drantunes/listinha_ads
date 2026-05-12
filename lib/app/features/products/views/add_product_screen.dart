@@ -12,20 +12,24 @@ class AddProductScreen extends StatefulWidget {
 }
 
 class _AddProductScreenState extends State<AddProductScreen> {
-  final formkey = GlobalKey<FormState>();
-  final productController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  final _productController = TextEditingController();
+  bool _isSaving = false;
 
   @override
   void dispose() {
-    productController.dispose();
+    _productController.dispose();
     super.dispose();
   }
 
-  void save() {
-    if (formkey.currentState!.validate()) {
-      widget.productsViewModel.saveProduct(
-        productController.text,
-      );
+  Future<void> _save() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _isSaving = true);
+
+    await widget.productsViewModel.saveProduct(_productController.text);
+
+    if (mounted) {
       GoRouter.of(context).pop();
     }
   }
@@ -35,17 +39,17 @@ class _AddProductScreenState extends State<AddProductScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Adicionar Produto'),
+        title: const Text('Adicionar Produto'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Form(
-          key: formkey,
+          key: _formKey,
           child: ListView(
             children: [
               TextFormField(
-                controller: productController,
-                decoration: InputDecoration(
+                controller: _productController,
+                decoration: const InputDecoration(
                   prefixIcon: Icon(Icons.shopping_cart),
                   border: OutlineInputBorder(),
                   filled: true,
@@ -53,7 +57,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   contentPadding: EdgeInsets.all(24),
                 ),
                 validator: (value) {
-                  if (value!.isEmpty) {
+                  if (value == null || value.isEmpty) {
                     return 'O campo nome é obrigatório';
                   }
                   return null;
@@ -62,23 +66,31 @@ class _AddProductScreenState extends State<AddProductScreen> {
               Padding(
                 padding: const EdgeInsets.only(top: 24.0),
                 child: FilledButton(
-                  onPressed: save,
+                  onPressed: _isSaving ? null : _save,
                   style: FilledButton.styleFrom(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6),
+                    ),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      mainAxisAlignment: .center,
-                      children: [
-                        Icon(Icons.check),
-                        SizedBox(width: 10),
-                        Text(
-                          'Salvar',
-                          style: TextStyle(fontSize: 22),
-                        ),
-                      ],
-                    ),
+                    child: _isSaving
+                        ? const SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.check),
+                              SizedBox(width: 10),
+                              Text('Salvar', style: TextStyle(fontSize: 22)),
+                            ],
+                          ),
                   ),
                 ),
               ),
